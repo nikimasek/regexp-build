@@ -1,0 +1,14 @@
+export type RegExpSequence = Array<RegExp>;
+export function regex(sequence: RegExpSequence): RegExp;
+export function find(sequence: RegExpSequence): RegExp;
+export function pattern(sequence: RegExpSequence): RegExp;
+export function group(sequence: RegExpSequence, name?: string): RegExp;
+export function zeroOrMore(sequence: RegExpSequence): RegExp;
+export function oneOrMore(sequence: RegExpSequence): RegExp;
+export function optional(sequence: RegExpSequence): RegExp;
+export function repeat(sequence: RegExpSequence, count: number): RegExp;
+export function choiceOf(...alternatives: RegExpSequence[]): RegExp;
+export function lookahead(sequence: RegExpSequence) : RegExp;
+export function negativeLookhead(sequence: RegExpSequence): RegExp;
+export function lookbehind(sequence: RegExpSequence) : RegExp;
+export function negativeLookbehind(sequence: RegExpSequence): RegExp;
