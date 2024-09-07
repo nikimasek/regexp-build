@@ -1,7 +1,7 @@
 function join(sequence) {
     if (typeof sequence == 'string') return sequence;
     if (sequence instanceof RegExp) return sequence.source;
-    return sequence.map(item => item.source).join('');
+    return sequence.map(({source}) => source.includes('|') ? `(?:${source})` : source).join('');
 }
 const isBlock = /^\([^()]*?\)$|^\[[^\[\]]*?\]$/
 function block(sequence) {
