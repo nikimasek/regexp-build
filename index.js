@@ -5,7 +5,7 @@ function join(sequence) {
 }
 const isBlock = /^\([^()]*?\)$|^\[[^\[\]]*?\]$/
 function block(sequence) {
-    const pattern = Array.isArray(sequence) ? sequence : join(sequence);
+    const pattern = join(sequence);
     return isBlock.test(pattern) ? pattern : `(?:${pattern})`;
 }
 export function regex(sequence) {
