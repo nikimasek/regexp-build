@@ -28,7 +28,7 @@ const regex = find([optional([/[-+]/]), /\d/]);
 | oneOrMore(...)          | /(...)+/       | Create one or more repeat RegExp   |
 | optional(...)           | /(...)?/       | Create optional RegExp             |
 | repeat(..., count)      | /(...){count}/ | Create n repeat RegExp             |
-| choiceOf(..., ...)      | /(...|...)/    | Create RegExp for select one       |
+| choiceOf(..., ...)      | /(...\|...)/    | Create RegExp for select one       |
 | lookahead(...)          | /(?=...)/      | Create look a head RegExp          |
 | negativeLookhead(...)   | /(!=...)/      | Create negative look a head RegExp |
 | lookbehind(...)         | /(?<=...)/     | Create look behind RegExp          |
