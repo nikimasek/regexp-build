@@ -1,52 +1,138 @@
-function join(sequence) {
-    if (typeof sequence == 'string') return sequence;
-    if (sequence instanceof RegExp) return sequence.source;
-    return sequence.map(({source}) => source.includes('|') ? `(?:${source})` : source).join('');
+/** @typedef {import('./index').Template} Template */
+
+function join(template) {
+    return [template].flat(Infinity).map(x => {
+        if (x instanceof RegExp) return x.source;
+        if (typeof x == 'string') return x.replaceAll(/[-[\]{}()*+?.,\\\/^$|#\s]/g,'\\$&');
+        return '';
+    }).join('');
 }
-const isBlock = /^\([^()]*?\)$|^\[[^\[\]]*?\]$/
-function block(sequence) {
-    const pattern = join(sequence);
-    return isBlock.test(pattern) ? pattern : `(?:${pattern})`;
+function block(template) {
+    return `(?:${join(template)})`;
 }
-export function regex(sequence) {
-    return new RegExp(join(sequence));
+
+/**
+ * Join many RegExp to one
+ * @example /.../
+ * @param {Template} template 
+ * @returns {RegExp}
+ */
+export function regex(template) {
+    return new RegExp(join(template));
 }
-export function find(sequence) {
-    return regex(sequence);
+
+/**
+ * Create RegExp for find
+ * @example /.../
+ * @param {Template} template 
+ * @returns {RegExp}
+ */
+export function find(template) {
+    return new RegExp(join(template));
 }
-export function pattern(sequence) {
-    return regex([/^/, ...sequence, /$/]);
+
+/**
+ * Create RegExp for match string
+ * @example /^...$/
+ * @param {Template} template 
+ * @returns {RegExp}
+ */
+export function pattern(template) {
+    return new RegExp(`^${join(template)}$`);
 }
-export function group(sequence, name) {
-    return new RegExp((name && typeof name == 'string' ? `(?<${name}>` : '(') + join(sequence) + ')');
+
+/**
+ * Create RegExp group
+ * @example
+ * /(...)/ 
+ * /(?<name>...)/
+ * @param {Template} template 
+ * @param {string=} name 
+ * @returns {RegExp}
+ */
+export function group(template, name) {
+    return new RegExp((name && typeof name == 'string' ? `(?<${name}>` : '(') + join(template) + ')');
 }
-export function zeroOrMore(sequence) {
-    return new RegExp(block(sequence) + '*');
+
+/**
+ * 
+ * @example /^...$/
+ * @param {Template} template 
+ * @returns {RegExp}
+ */
+export function zeroOrMore(template) {
+    return new RegExp(block(template) + '*');
 }
-export function oneOrMore(sequence) {
-    return new RegExp(block(sequence) + '+');
+
+/**
+ * 
+ * @param {Template} template 
+ * @returns {RegExp}
+ */
+export function oneOrMore(template) {
+    return new RegExp(block(template) + '+');
 }
-export function optional(sequence) {
-    return new RegExp(block(sequence) + '?');
+
+/**
+ * 
+ * @param {Template} template 
+ * @returns {RegExp}
+ */
+export function optional(template) {
+    return new RegExp(block(template) + '?');
 }
-export function repeat(sequence, count) {
-    return new RegExp(block(sequence) + `{${count}}`);
+
+/**
+ * 
+ * @param {Template} template 
+ * @param {number | {nin?: number, max?: number}} count 
+ * @returns {RegExp}
+ */
+export function repeat(template, count) {
+    return new RegExp(`${block(template) }{${typeof count == 'number' ? count : ((count.min || '') + ',' + (count.max || ''))}}`);
 }
-export function choiceOf(...alternatives) {
-    return new RegExp(alternatives.map(sequence => {
-        const pattern = join(sequence);
-        return pattern.includes('|') ? block(pattern) : pattern;
-    }).join('|'));
+
+/**
+ * 
+ * @param {Template[]} templates 
+ * @returns {RegExp}
+ */
+export function choiceOf(...templates) {
+    return new RegExp(templates.map(block).join('|'));
 }
-export function lookahead(sequence) {
-    return new RegExp(`(?=${join(sequence)})`);
+
+/**
+ * 
+ * @param {Template} template 
+ * @returns {RegExp}
+ */
+export function lookahead(template) {
+    return new RegExp(`(?=${join(template)})`);
 }
-export function negativeLookhead(sequence) {
-    return new RegExp(`(!=${join(sequence)})`);
+
+/**
+ * 
+ * @param {Template} template 
+ * @returns {RegExp}
+ */
+export function negativeLookhead(template) {
+    return new RegExp(`(!=${join(template)})`);
 }
-export function lookbehind(sequence) {
-    return new RegExp(`(?<=${join(sequence)})`);
+
+/**
+ * 
+ * @param {Template} template 
+ * @returns {RegExp}
+ */
+export function lookbehind(template) {
+    return new RegExp(`(?<=${join(template)})`);
 }
-export function negativeLookbehind(sequence) {
-    return new RegExp(`(?<!=${join(sequence)})`);
+
+/**
+ * 
+ * @param {Template} template 
+ * @returns {RegExp}
+ */
+export function negativeLookbehind(template) {
+    return new RegExp(`(?<!=${join(template)})`);
 }
