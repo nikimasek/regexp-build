@@ -1,8 +1,9 @@
 import * as Regex from '../index.js';
 
+console.log(Regex.build('(x{0}|E{1})', /a/, /b/));
 console.log(Regex.regex([/a/, /b/]));
 console.log(Regex.find([/a/, /b/]));
-console.log(Regex.pattern([/a/, /b/]));
+console.log(Regex.pattern([/^a$/, /^b$/]));
 console.log(Regex.group([/a/, /b/]));
 console.log(Regex.group([/a/, /b/], 'test'));
 console.log(Regex.zeroOrMore([/a/, /b/]));

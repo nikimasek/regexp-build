@@ -19,6 +19,7 @@ const regex = find([optional(/[-+]/), /\d/]);
 
 | Function                | Regex          | Description                        |
 |-------------------------|----------------|------------------------------------|
+| build(....,.....)       | /.../          | Build RegEexp from parts           |
 | regex(...)              | /.../          | Join many RegExp to one            |
 | find(...)               | /.../          | Create RegExp for find             |
 | pattern(...)            | /^...$/        | Create RegExp for match string     |
@@ -37,7 +38,7 @@ const regex = find([optional(/[-+]/), /\d/]);
 # Example
 
 ```js
-import { choiceOf, pattern, zeroOrMore } from 'regexp-build';
+import { choiceOf, pattern, zeroOrMore, build } from 'regexp-build';
 
 const domain = /\w+\.[a-z]{3}/;
 // /http|https/
@@ -46,4 +47,6 @@ const protocol = choiceOf(/http/, /https/);
 const url = pattern([protocol, /:\/\//, zeroOrMore(/\w+\./), domain]);
 // /^\w+@\w+\.[a-z]{3}$/
 const email = pattern([/\w+@/, domain]);
+// /-(?:[1-9]\d+):(?:\w+)-/
+const x = build('-{0}:{1}-', /[1-9]\d+/, /\w+/)
 ```

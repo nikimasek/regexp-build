@@ -1,5 +1,6 @@
 type Template = RegExp | string | Template[];
 
+export function build(source: string, ...template: RegExp): RegExp;
 export function regex(template: Template): RegExp;
 export function find(template: Template): RegExp;
 export function pattern(template: Template): RegExp;
